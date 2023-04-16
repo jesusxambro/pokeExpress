@@ -7,6 +7,7 @@ import routes from "./routes/index.js";
 
 const app = express();
 
+app.use(express.json());
 app.use(cors());
 
 app.use('/card', routes.card);
@@ -14,7 +15,6 @@ app.use('/cards', routes.cards);
 app.use('/deck', routes.deck);
 app.use('/decks', routes.decks);
 
-app.use(express.json());
 
 
 app.get("/", (req, res) => {
