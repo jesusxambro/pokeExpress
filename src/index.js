@@ -12,8 +12,8 @@ app.use(cors());
 
 app.use('/card', routes.card);
 app.use('/cards', routes.cards);
-app.use('/deck', routes.deck);
-app.use('/decks', routes.decks);
+// app.use('/deck', routes.deck);
+// app.use('/decks', routes.decks);
 
 
 

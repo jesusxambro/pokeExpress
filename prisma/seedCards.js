@@ -1,50 +1,39 @@
-[
+const seedCards =[
   {
-    "id": 1,
     "hp": 100,
     "name": "Charizard",
     "description": "A fire-breathing dragon-like Pokemon.",
-    "type": "Fire/Flying",
-    "createdOn": "2023-04-12T12:34:56.789Z"
+    "type": "Fire/Flying"
   },
   {
-    "id": 2,
     "hp": 80,
     "name": "Bulbasaur",
     "description": "A grass/poison type Pokemon with a bulb on its back.",
-    "type": "Grass/Poison",
-    "createdOn": "2023-04-12T12:34:56.789Z"
+    "type": "Grass/Poison"
   },
 	{
-		"id": 3,
 		"hp": 120,
 		"name": "Pikachu",
 		"description": "A cute and popular electric type Pokemon.",
-		"type": "Electric",
-		"createdOn": "2023-04-12T12:34:56.789Z"
+		"type": "Electric"
 	},
 	{
-		"id": 4,
 		"hp": 70,
 		"name": "Jigglypuff",
 		"description": "A fairy/normal type Pokemon known for its lullaby song.",
-		"type": "Fairy/Normal",
-		"createdOn": "2023-04-12T12:34:56.789Z"
+		"type": "Fairy/Normal"
 	},
 	{
-		"id": 5,
 		"hp": 90,
 		"name": "Squirtle",
 		"description": "A water type Pokemon with a turtle-like appearance.",
-		"type": "Water",
-		"createdOn": "2023-04-12T12:34:56.789Z"
+		"type": "Water"
 	},
 	{
-		"id": 6,
 		"hp": 100,
 		"name": "Eevee",
 		"description": "A normal type Pokemon with the ability to evolve into different forms.",
-		"type": "Normal",
-		"createdOn": "2023-04-12T12:34:56.789Z"
+		"type": "Normal"
 	}
 ]
+export default seedCards;

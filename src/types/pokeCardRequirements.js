@@ -1,5 +1,5 @@
 export const pokeCardRequirements  = async (req, res, next) => {
-    console.log(req);
+    // console.log(req);
     
     try {
       const required = [
