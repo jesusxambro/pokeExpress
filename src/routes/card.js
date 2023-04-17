@@ -5,42 +5,28 @@ import { pokeCardRequirements } from "../types/pokeCardRequirements.js";
 import databaseAccess from "../utils/db.js";
 
 const router = Router();
+const updateCard = (foundCard, updatedFields) => {
+    const finalCard ={};
+    
+    return finalCard;
+};
 
-
-
-// const updateCards = () => {
-//    let cards =  fs.readFileSync(dataPath, "utf8", (err, data) => {
-//         if (err) {
-//           throw err;
-//         }
-//         return JSON.parse(data);
-//       });
-//       cards = JSON.parse(cards);
-//       const hashmap = cards.reduce((acc, obj) => {
-//         acc[obj.id] = obj;
-//         return acc;
-//     }, {});
-//     return hashmap;
-// };
-
-//this needs to be below updates from above due to sync reading
-// let cards= updateCards();;
-
-const foundCard = false;
-
-
-// router.get('/:cardId', (req, res) => {
-//   if(!req.params.cardId){
-//     res.send().status(400);
-//   }
-//     cards = updateCards();
-//     if(cards[req.params.cardId] !== undefined){
-//       res.send(cards[req.params.cardId])
-//     }else{
-//       res.status(404).json({message: `Card with id:${req.params.cardId} not found!`});
-//     }
-// });
-
+router.get('/:cardId', async (req, res) => {
+  if(!req.params.cardId ){
+    res.send().status(400);
+  }
+  try{
+    const idToLook = parseInt(req.params.cardId);
+    const lookingUpCard = await databaseAccess.pokeCard.findUnique({where: {id: idToLook}});
+    (lookingUpCard != (null || undefined)) ?
+    res.status(200).json(lookingUpCard)
+    :
+    res.status(404).json({message: `Card with id:${req.params.cardId} not found!`})
+  }catch(error){
+    console.log(error?.message);
+    res.status(500).json({message: "Something went wrong!"});
+  }
+});
 
 router.post("", pokeCardRequirements, async (req, res) => {
     try{
@@ -51,5 +37,24 @@ router.post("", pokeCardRequirements, async (req, res) => {
         console.log(error?.message);
         res.status(500).json({message:`something went wrong!`})
     }});
+
+router.put("/:cardId", async (req, res) => {
+    if(!req.params.cardId || !req.body){
+        res.send().status(400);
+      }
+      try{
+        const idToLook = parseInt(req.params.cardId);
+        const lookingUpCard = await databaseAccess.pokeCard.findUnique({where: {id: idToLook}});
+        if(lookingUpCard != (null || undefined)){
+        const updatedCard = await updatedCard(lookingUpCard, req.body);
+            res.status(200).json(lookingUpCard)
+        }else{
+            res.status(404).json({message: `Card with id:${req.params.cardId} not found!`})
+        }
+      }catch(error){
+        console.log(error?.message);
+        res.status(500).json({message: "Something went wrong!"});
+      }
+})
 
 export default router;
