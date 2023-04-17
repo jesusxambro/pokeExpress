@@ -1,4 +1,4 @@
-export const pokeCardRequirements  = async (req, res, next) => {
+export const pokeCardRequirements  = async (req :any, res:any, next:any) => {
     // console.log(req);
     
     try {

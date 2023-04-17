@@ -1,15 +1,12 @@
 import { Router } from "express";
 import fs from "fs";
-import { dataPath } from "./cards.js";
-import { pokeCardRequirements } from "../types/pokeCardRequirements.js";
-import databaseAccess from "../utils/db.js";
+import { dataPath } from "./cards";
+import { pokeCardRequirements } from "../types/pokeCardRequirements";
+import databaseAccess from "../utils/db";
+import { PokeCard } from "@prisma/client";
 
 const router = Router();
-const updateCard = (foundCard, updatedFields) => {
-    const finalCard ={};
-    
-    return finalCard;
-};
+
 
 router.get('/:cardId', async (req, res) => {
   if(!req.params.cardId ){
@@ -22,7 +19,7 @@ router.get('/:cardId', async (req, res) => {
     res.status(200).json(lookingUpCard)
     :
     res.status(404).json({message: `Card with id:${req.params.cardId} not found!`})
-  }catch(error){
+  }catch(error : any){
     console.log(error?.message);
     res.status(500).json({message: "Something went wrong!"});
   }
@@ -33,12 +30,17 @@ router.post("", pokeCardRequirements, async (req, res) => {
         const newCard = await databaseAccess.pokeCard.create({data:{...req.body}})
         res.json(newCard);
 
-    }catch(error){
+    }catch(error :any){
         console.log(error?.message);
         res.status(500).json({message:`something went wrong!`})
     }});
 
 router.put("/:cardId", async (req, res) => {
+  const updateCard = (foundCard : PokeCard, updatedFields:any) => {
+    const finalCard ={};
+    
+    return finalCard;
+  };
     if(!req.params.cardId || !req.body){
         res.send().status(400);
       }
@@ -46,13 +48,13 @@ router.put("/:cardId", async (req, res) => {
         const idToLook = parseInt(req.params.cardId);
         const lookingUpCard = await databaseAccess.pokeCard.findUnique({where: {id: idToLook}});
         if(lookingUpCard != (null || undefined)){
-        const updatedCard = await updatedCard(lookingUpCard, req.body);
+        const updatedCard : any = await updateCard(lookingUpCard, req.body);
             res.status(200).json(lookingUpCard)
         }else{
             res.status(404).json({message: `Card with id:${req.params.cardId} not found!`})
         }
       }catch(error){
-        console.log(error?.message);
+        console.log(error);
         res.status(500).json({message: "Something went wrong!"});
       }
 })

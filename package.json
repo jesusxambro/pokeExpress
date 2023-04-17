@@ -2,10 +2,11 @@
   "name": "pokeexpress",
   "version": "1.0.0",
   "description": "A simple Pokemon API for storing decks and cards in plaintext",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
+    "build": "npx tsc",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
-    "start": "nodemon --exec babel-node src/index.js",
+    "start": "nodemon src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -14,7 +15,6 @@
   },
   "keywords": [],
   "author": "",
-  "type": "module",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/jesusxambro/pokeExpress/issues"
@@ -24,7 +24,12 @@
     "@babel/core": "^7.21.4",
     "@babel/node": "^7.20.7",
     "@babel/preset-env": "^7.21.4",
-    "nodemon": "^2.0.22"
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.15.11",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
   },
   "dependencies": {
     "@prisma/client": "^4.12.0",
