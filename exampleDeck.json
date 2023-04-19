@@ -1,0 +1,18 @@
+{
+	"name": "First Seeding Pokemon Deck",
+	"description": "First Deck",
+	"cards": [
+		{
+			"hp": 120,
+			"name": "Pikachu",
+			"description": "A cute and popular electric type Pokemon.",
+			"type": "Electric"
+		},
+		{
+			"hp": 70,
+			"name": "Jigglypuff",
+			"description": "A fairy/normal type Pokemon known for its lullaby song.",
+			"type": "Fairy/Normal"
+        		}
+	]
+}
