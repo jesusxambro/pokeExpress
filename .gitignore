@@ -1,4 +1,4 @@
 node_modules
 dist
 /prisma/data.db
-/prisma.db-journal
+/prisma/data.db-journal

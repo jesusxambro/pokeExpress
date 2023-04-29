@@ -36,4 +36,3 @@ const seedCards =[
 		"type": "Normal"
 	}
 ]
-export default seedCards;
