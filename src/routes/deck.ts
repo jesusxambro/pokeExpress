@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import databaseAccess from "../utils/db";
-import { PokeDeck } from '@prisma/client';
+import { PokeCard, PokeDeck } from '@prisma/client';
 
 const router = Router();
 
@@ -13,8 +13,6 @@ router.get("/:deckId", async (req, res) => {
     let lookingUpCard : PokeDeck | null= await databaseAccess.pokeDeck.findUnique({
       where: { id: idToLook }, include:{cards:true},
     });
-
-
     lookingUpCard != (null || undefined)
       ? res.status(200).json(lookingUpCard)
       : res
@@ -27,24 +25,45 @@ router.get("/:deckId", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  if(!req.body){
+  if (!req.body) {
     res.send().status(400);
   }
-  try{
-    console.log(req.body);
-    let savedPokeDeck = await databaseAccess.pokeDeck.create({data:{
-      description: req.body.description,
-      name: req.body.name,
-      cards: {
-        create: req.body.cards}
-    }})
-    res.status(200).json(savedPokeDeck);
+  try {
+    const cardPromises = req.body.cards.map(async (card :any) => {
+      const existingCard = await databaseAccess.pokeCard.findFirst({
+        where: {
+          name: card.name,
+          hp: card.hp,
+          description: card.description,
+          type: card.type,
+        },
+      });
 
-  }catch(error: any) {
+      return existingCard
+        ? existingCard
+        : await databaseAccess.pokeCard.create({ data: card });
+    });
+
+    // Wait for all card operations to complete
+    const resolvedCards = await Promise.all(cardPromises);
+    console.log(resolvedCards);
+
+    const savedPokeDeck = await databaseAccess.pokeDeck.create({
+      data: {
+        description: req.body.description,
+        name: req.body.name,
+        cards: {
+          connect: resolvedCards.map((card) => ({ id: card.id })),
+        },
+      },
+    });
+
+    res.status(200).json(savedPokeDeck);
+  } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Something went wrong posting your deck!" });
   }
-})
+});
 
 router.put("/:id", async (req, res) => {
   if (!req.body) {
