@@ -1,5 +1,7 @@
-import { PrismaClient } from "@prisma/client";
-import seedData from "./seedCards.js";
+// const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
+// const seedData = require('./seedCards');
+import seedData from "./seedCards";
 
 
 const dbPrisma = new PrismaClient();
