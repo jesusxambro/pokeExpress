@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import databaseAccess from "../utils/db";
 import { PokeCard, PokeDeck } from '@prisma/client';
+import {pokeCardRequirements} from "../types/pokeCardRequirements";
 
 const router = Router();
 
@@ -134,5 +135,174 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ message: "Something went wrong deleting the deck." });
   }
 });
+router.get("/:id/cards", async (req, res) => {
+  if (!req.params.id) {
+    res.send().status(400);
+  }
+  const deckId = parseInt(req.params.id);
 
+  try {
+    const deckFound = await databaseAccess.pokeDeck.findUnique({
+      where: {
+        id: deckId,
+      },
+      include: {
+        cards: true,
+      },
+    });
+
+    if (!deckFound) {
+      res.status(404).json({ message: `Deck with id:${deckId} not found.` });
+    } else {
+      res.status(200).json(deckFound.cards);
+    }
+  } catch (error :any) {
+    console.log(error.message);
+    res.status(500).json({ message: "Something went wrong while fetching the cards." });
+  }
+});
+router.post("/:id/card", pokeCardRequirements, async (req, res) => {
+  if (!req.params.id) {
+    res.send().status(400);
+  }
+  const deckId = parseInt(req.params.id);
+
+  try {
+    const deckFound = await databaseAccess.pokeDeck.findUnique({
+      where: {
+        id: deckId,
+      },
+    });
+
+    if (!deckFound) {
+      res.status(404).json({ message: `Deck with id:${deckId} not found.` });
+    } else {
+      const newCard = await databaseAccess.pokeCard.create({
+        data: {
+          ...req.body,
+          pokeDeck: {
+            connect: { id: deckId },
+          },
+        },
+      });
+      res.json(newCard);
+    }
+  } catch (error :any) {
+    console.log(error.message);
+    res.status(500).json({ message: `Something went wrong!` });
+  }
+});
+router.get("/:id/card/:card_id", async (req, res) => {
+  if (!req.params.id || !req.params.card_id) {
+    res.send().status(400);
+  }
+  const deckId = parseInt(req.params.id);
+  const cardId = parseInt(req.params.card_id);
+
+  try {
+    const deckFound = await databaseAccess.pokeDeck.findUnique({
+      where: {
+        id: deckId,
+      },
+      include: {
+        cards: {
+          where: {
+            id: cardId,
+          },
+        },
+      },
+    });
+
+    if (!deckFound) {
+      res.status(404).json({ message: `Deck with id:${deckId} not found.` });
+    } else if (deckFound.cards.length === 0) {
+      res.status(404).json({ message: `Card with id:${cardId} not found in deck with id:${deckId}.` });
+    } else {
+      res.status(200).json(deckFound.cards[0]);
+    }
+  } catch (error:any) {
+    console.log(error.message);
+    res.status(500).json({ message: "Something went wrong while fetching the card." });
+  }
+});
+
+router.put("/:id/card/:card_id", async (req, res) => {
+  if (!req.params.id || !req.params.card_id) {
+    res.send().status(400);
+  }
+  const deckId = parseInt(req.params.id);
+  const cardId = parseInt(req.params.card_id);
+
+  try {
+    const deckFound = await databaseAccess.pokeDeck.findUnique({
+      where: {
+        id: deckId,
+      },
+      include: {
+        cards: {
+          where: {
+            id: cardId,
+          },
+        },
+      },
+    });
+
+    if (!deckFound) {
+      res.status(404).json({ message: `Deck with id:${deckId} not found.` });
+    } else if (deckFound.cards.length === 0) {
+      res.status(404).json({ message: `Card with id:${cardId} not found in deck with id:${deckId}.` });
+    } else {
+      const updatedCard = await databaseAccess.pokeCard.update({
+        where: { id: cardId },
+        data: { ...req.body },
+      });
+      res.status(200).json(updatedCard);
+    }
+  } catch (error : any ) {
+    console.log(error.message);
+    res.status(500).json({ message: "Something went wrong while updating the card." });
+  }
+});
+
+router.delete("/:id/card/:card_id", async (req, res) => {
+  if (!req.params.id || !req.params.card_id) {
+    res.send().status(400);
+  }
+  const deckId = parseInt(req.params.id);
+  const cardId = parseInt(req.params.card_id);
+
+  try {
+    const deckFound = await databaseAccess.pokeDeck.findUnique({
+      where: {
+        id: deckId,
+      },
+      include: {
+        cards: {
+          where: {
+            id: cardId,
+          },
+        },
+      },
+    });
+
+    if (!deckFound) {
+      res.status(404).json({ message: `Deck with id:${deckId} not found.` });
+    } else if (deckFound.cards.length === 0) {
+      res.status(404).json({ message: `Card with id:${cardId} not found in deck with id:${deckId}.` });
+    } else {
+      const updatedDeck = await databaseAccess.pokeDeck.update({
+        where: { id: deckId },
+        data: {
+          cards: {
+            disconnect: { id: cardId },
+          },
+        },
+      });
+      res.status(200).json({ message: `Card with id:${cardId} has been removed from deck with id:${deckId}.` });
+    }
+  } catch (error :any) {
+    console.log(error.message);
+    res.status(500).json({ message: "Something went wrong while removing the card from the deck." });
+  }
+});
 export default router;

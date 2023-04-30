@@ -18,6 +18,7 @@ This project is a simple RESTful API built in Express.js, Prisma ORM, SQLite, an
 ## Usage
 To use this API, there are 4 main routes. 
 ### Cards
+http://localhost:3005/cards
 The 'cards' route only has 1 method. 'GET' request returns a list of all cards currently available.
 
 ### Card
@@ -59,7 +60,8 @@ The object expected is this:
 ```
 ##### DELETE
 http://localhost:3005/card/:id
-This call will delete the card if found.
+This call will delete the card if found but also not delete if it is associated with a deck.
+
 
 
 
