@@ -26,5 +26,5 @@ const port = process.env.PORT || 3000;
 
 
 app.listen(port, () =>
-  console.log(`Example app listening on port ${process.env.PORT}!`)
+  console.log(`Poke Express listening on port ${process.env.PORT}!`)
 );

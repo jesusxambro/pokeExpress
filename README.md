@@ -63,12 +63,54 @@ http://localhost:3005/card/:id
 This call will delete the card if found but also not delete if it is associated with a deck.
 
 
+## Decks
+http://localhost:3005/decks
+The 'decks' route for 'GET' requests, returns a list of all decks currently in the database.
+
+#### Deck GET
+http://localhost:3005/deck/:id
+This request returns either the deck or a not found based on the id. 
+
+#### Deck POST
+http://localhost:3005/deck/:id
+This request adds the new deck and its cards to the database.
+We check first if the cards are already in the database, if not, we create the cards.
+
+#### Deck PUT
+http://localhost:3005/deck/:id
+This request updates only the name or description of the deck with the specified id.
+
+#### Deck DELETE
+http://localhost:3005/deck/:id
+This request disassociates the relation with the cards to this deck,
+then deletes the deck from the database.
+
+#### Deck Cards GET
+http://localhost:3005/deck/:id/cards
+This request returns all the cards associated with the deck in the specified ID. 
+
+#### Deck Card POST
+http://localhost:3005/deck/:id/card
+This request checks if the card exists, and if it does, associates it with the deck,
+or creates a new card associated with this deck ID.
+
+#### Deck Card GET
+http://localhost:3005/deck/:id/card/:cardId
+This request returns the spedicifed card in the specidfied deck.
+
+#### Deck Card PUT
+http://localhost:3005/deck/:id/card/:cardId
+This request updates the card in the specified deck.
+
+#### Deck Card DELETE
+http://localhost:3005/deck/:id/card/:cardId
+This request deletes the association with the card and the specified deck.
 
 
 
 ### Example Deck in JSON:
 
-```
+```JSON
 {
   "name": "Second Pokemon Deck",
   "description": "Second Deck",
@@ -93,4 +135,16 @@ This call will delete the card if found but also not delete if it is associated 
     }
   ]
 }
+```
+
+### Example Card in JSON
+
+```JSON
+{
+  "hp": 100,
+  "name": "Mew",
+  "description": "A rare and mythical Psychic type Pokemon with the ability to learn any move.",
+  "type": "Psychic"
+}
+
 ```

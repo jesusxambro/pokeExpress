@@ -44,8 +44,6 @@ router.post("/", async (req, res) => {
         ? existingCard
         : await databaseAccess.pokeCard.create({ data: card });
     });
-
-    // Wait for all card operations to complete
     const resolvedCards = await Promise.all(cardPromises);
     console.log(resolvedCards);
 
