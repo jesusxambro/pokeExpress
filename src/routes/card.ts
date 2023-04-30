@@ -98,6 +98,9 @@ router.delete("/:cardId", async (req, res) => {
         {
           where:{
             id:idToLook
+          },
+          select:{
+            pokeDeck: true
           }
         }
     )
@@ -106,10 +109,16 @@ router.delete("/:cardId", async (req, res) => {
     if (cardFound === null || undefined) {
       res.status(404).json({ message: `Card with id:${idToLook} not found.` });
     }else {
-      const didDelete = await databaseAccess.pokeCard.delete({
-        where: {id: idToLook},
-      });
-      res.status(200).json({message: "Successfully deleted.", card: didDelete});
+      if (cardFound.pokeDeck && cardFound.pokeDeck.length > 0) {
+        res.status(403).json({
+          message: `Card with id:${idToLook} is associated with one or more decks. Please remove it from the decks before deleting.`,
+        });
+      } else {
+        const didDelete = await databaseAccess.pokeCard.delete({
+          where: { id: idToLook },
+        });
+        res.status(200).json({ message: "Successfully deleted.", card: didDelete });
+      }
     }
 
   } catch (error: any) {
