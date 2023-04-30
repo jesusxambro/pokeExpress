@@ -100,22 +100,33 @@ router.delete("/:id", async (req, res) => {
     res.send().status(400);
   }
   const deckId = Number(req.params.id);
-  const lookUpDeck = await databaseAccess.pokeDeck.findUnique(
-    {
-      where:{
-        id: deckId,
-      }
+  const lookUpDeck :any = await databaseAccess.pokeDeck.findUnique({
+    where: {
+      id: deckId,
+    },
+    select:{
+      cards:true //also gets the cards in the joint table _PokeCardToPokeDeck
     }
-  );
-  if(!lookUpDeck) {
+  });
+  if (!lookUpDeck) {
     res.status(404).json({ message: `Deck with id: ${deckId}, not found.` });
-  };
-
+  }
   try {
+    //console.log(lookUpDeck);
+    await databaseAccess.pokeDeck.update({
+      where: {
+        id: deckId,
+      },
+      data: {
+        cards: {
+          disconnect: lookUpDeck.cards.map((card:PokeCard) => ({ id: card.id })),
+        },
+      },
+    });
     const deletedDeck = await databaseAccess.pokeDeck.delete({
       where: {
-        id: deckId
-      }
+        id: deckId,
+      },
     });
     res.status(200).json(deletedDeck);
   } catch (error) {

@@ -1,7 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 
-let databaseAccess = new PrismaClient();;
-// if(!global.__prisma__){
-//     global.__prisma__ = new PrismaClient();
-// }
+let databaseAccess = new PrismaClient();
+
 export default databaseAccess;

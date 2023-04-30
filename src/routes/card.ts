@@ -1,10 +1,7 @@
 import { Router } from "express";
-import fs from "fs";
-import { dataPath } from "./cards";
 import { pokeCardRequirements } from "../types/pokeCardRequirements";
 import databaseAccess from "../utils/db";
 import { PokeCard } from "@prisma/client";
-import { simpleBodyValidator } from "../types/simpleBodyValidator";
 
 const router = Router();
 router.get("/plain/:cardId", async (req, res) => {
@@ -60,13 +57,14 @@ router.post("", pokeCardRequirements, async (req, res) => {
 });
 
 router.put("/:cardId", async (req: any, res: any) => {
+  if (!req.params.cardId || !req.body) {
+    res.send().status(400);
+  }
+  console.log(req.body);
   const updateCard = (foundCard: PokeCard, updatedFields: any) => {
     const finalCard: PokeCard = { ...foundCard, ...updatedFields };
     return finalCard;
   };
-  if (!req.params.cardId || !req.body) {
-    res.send().status(400);
-  }
   try {
     const idToLook = parseInt(req.params.cardId);
     const lookingUpCard = await databaseAccess.pokeCard.findUnique({
@@ -95,12 +93,25 @@ router.delete("/:cardId", async (req, res) => {
   if (!req.params.cardId) {
     res.send().status(400);
   }
-  try {
     const idToLook = parseInt(req.params.cardId);
-    const didDelete = await databaseAccess.pokeCard.delete({
-      where: { id: idToLook },
-    });
-    res.status(200).json({ message: "Succesfully deleted." });
+    const cardFound = await databaseAccess.pokeCard.findUnique(
+        {
+          where:{
+            id:idToLook
+          }
+        }
+    )
+  console.log(cardFound)
+  try {
+    if (cardFound === null || undefined) {
+      res.status(404).json({ message: `Card with id:${idToLook} not found.` });
+    }else {
+      const didDelete = await databaseAccess.pokeCard.delete({
+        where: {id: idToLook},
+      });
+      res.status(200).json({message: "Successfully deleted.", card: didDelete});
+    }
+
   } catch (error: any) {
     console.log(error.message);
     res.end().status(500);
