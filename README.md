@@ -1,4 +1,4 @@
-# Jesus Ambrocio CSC 570I Web Services 
+# Poke Express Backend API
 This project is a simple RESTful API built in Express.js, Prisma ORM, SQLite, and Typescript.
 ## Installation
 1. This project requires [Node](https://nodejs.org/en) to be installed. It is offered in many operating systems.
