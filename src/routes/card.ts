@@ -104,7 +104,6 @@ router.delete("/:cardId", async (req, res) => {
           }
         }
     )
-  console.log(cardFound)
   try {
     if (cardFound === null || undefined) {
       res.status(404).json({ message: `Card with id:${idToLook} not found.` });
