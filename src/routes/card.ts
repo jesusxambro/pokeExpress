@@ -121,7 +121,6 @@ router.delete("/:cardId", async (req, res) => {
     }
 
   } catch (error: any) {
-    console.log(error.message);
     res.end().status(500);
   }
 });

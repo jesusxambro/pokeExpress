@@ -137,6 +137,7 @@ This request deletes the association with the card and the specified deck.
 }
 ```
 
+
 ### Example Card in JSON
 
 ```JSON
