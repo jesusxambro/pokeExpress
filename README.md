@@ -143,11 +143,8 @@ This request deletes the association with the card and the specified deck.
 {
   "hp": 100,
   "name": "Mew",
-  "description": "A rare and mythical Psychic type Pokemon with the ability to learn any move.",
+  "description": "A rare and awesome Psychic type Pokemon with the ability to learn any move.",
   "type": "Psychic"
 }
 
 ```
-
-
-Testing out deployment to Fly.io
